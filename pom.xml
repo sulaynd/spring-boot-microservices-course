@@ -19,10 +19,10 @@
 
     <modules>
         <module>catalog-service</module>
-        <module>order-service</module>
+        <!--module>order-service</module>
         <module>notification-service</module>
         <module>api-gateway</module>
-        <module>bookstore-webapp</module>
+        <module>bookstore-webapp</module-->
     </modules>
 
     <build>
