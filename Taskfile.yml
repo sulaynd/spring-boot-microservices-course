@@ -6,8 +6,8 @@ vars:
   DC_DIR: "deployment/docker-compose"
   INFRA_DC_FILE: "{{.DC_DIR}}/infra.yml"
   APPS_DC_FILE: "{{.DC_DIR}}/apps.yml"
-  MONITORING_DC_FILE: "{{.DC_DIR}}/monitoring.yml"
-  SLEEP_CMD: '{{if eq .GOOS "windows"}}timeout{{else}}sleep{{end}}'
+#  MONITORING_DC_FILE: "{{.DC_DIR}}/monitoring.yml"
+#  SLEEP_CMD: '{{if eq .GOOS "windows"}}timeout{{else}}sleep{{end}}'
 
 tasks:
   default:
@@ -24,11 +24,12 @@ tasks:
 
   build:
     cmds:
+#      - "{{.MVNW}} verify"
       - "{{.MVNW}} -pl catalog-service spring-boot:build-image -DskipTests"
-      - "{{.MVNW}} -pl order-service spring-boot:build-image -DskipTests"
-      - "{{.MVNW}} -pl notification-service spring-boot:build-image -DskipTests"
-      - "{{.MVNW}} -pl api-gateway spring-boot:build-image -DskipTests"
-      - "{{.MVNW}} -pl bookstore-webapp spring-boot:build-image -DskipTests"
+#      - "{{.MVNW}} -pl order-service spring-boot:build-image -DskipTests"
+#      - "{{.MVNW}} -pl notification-service spring-boot:build-image -DskipTests"
+#      - "{{.MVNW}} -pl api-gateway spring-boot:build-image -DskipTests"
+#      - "{{.MVNW}} -pl bookstore-webapp spring-boot:build-image -DskipTests"
 
   start_infra:
     cmds:
@@ -45,20 +46,20 @@ tasks:
       - task: sleep
       - task: start_infra
 
-  start_monitoring:
-    cmds:
-      - "docker compose -f {{.MONITORING_DC_FILE}} up -d"
-
-  stop_monitoring:
-    cmds:
-      - "docker compose -f {{.MONITORING_DC_FILE}} stop"
-      - "docker compose -f {{.MONITORING_DC_FILE}} rm -f"
-
-  restart_monitoring:
-    cmds:
-      - task: stop_monitoring
-      - task: sleep
-      - task: start_monitoring
+#  start_monitoring:
+#    cmds:
+#      - "docker compose -f {{.MONITORING_DC_FILE}} up -d"
+#
+#  stop_monitoring:
+#    cmds:
+#      - "docker compose -f {{.MONITORING_DC_FILE}} stop"
+#      - "docker compose -f {{.MONITORING_DC_FILE}} rm -f"
+#
+#  restart_monitoring:
+#    cmds:
+#      - task: stop_monitoring
+#      - task: sleep
+#      - task: start_monitoring
 
   start:
     deps: [build]
@@ -80,4 +81,5 @@ tasks:
     vars:
       DURATION: "{{default 5 .DURATION}}"
     cmds:
-      - "{{.SLEEP_CMD}} {{.DURATION}}"
+      - sleep {{.DURATION}}
+      #- "{{.SLEEP_CMD}} {{.DURATION}}"
