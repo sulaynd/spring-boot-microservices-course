@@ -14,8 +14,8 @@ class CatalogServiceClientConfig {
     RestClient restClient(RestClient.Builder builder, ApplicationProperties properties) {
         return builder.baseUrl(properties.catalogServiceUrl())
                 .requestFactory(ClientHttpRequestFactories.get(ClientHttpRequestFactorySettings.DEFAULTS
-                        .withConnectTimeout(Duration.ofSeconds(5))
-                        .withReadTimeout(Duration.ofSeconds(5))))
+                        .withConnectTimeout(Duration.ofSeconds(5)) // time taken within to establish connection
+                        .withReadTimeout(Duration.ofSeconds(5)))) // wait to receive the response from the service
                 .build();
     }
 }

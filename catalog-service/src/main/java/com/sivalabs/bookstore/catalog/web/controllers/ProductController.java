@@ -32,9 +32,23 @@ class ProductController {
     @GetMapping("/{code}")
     ResponseEntity<Product> getProductByCode(@PathVariable String code) {
         log.info("Fetching product for code: {}", code);
+        // sleep() for test purpose timeout, retry and circuit breaker
+        // sleep();
         return productService
                 .getProductByCode(code)
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> ProductNotFoundException.forCode(code));
     }
+
+    /**
+     * Testing resilience4J, retry and timeout with sleep method
+     */
+    //    void sleep(){
+    //        try {
+    //            Thread.sleep(6000);  //wait for 6 seconds because we have configured 5 seconds for timeout
+    //        }
+    //        catch (InterruptedException e){
+    //            e.printStackTrace();
+    //        }
+    //    }
 }

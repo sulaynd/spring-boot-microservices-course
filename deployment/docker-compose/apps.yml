@@ -23,7 +23,6 @@ services:
           memory: 700m
     labels:
       logging: "promtail"
-
 #
 #  order-service:
 #    image: sulaynd/bookstore-order-service

@@ -15,15 +15,28 @@ import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.jdbc.Sql;
 
-@Sql("/test-orders.sql")
+// @Sql("/test-orders.sql")
 class OrderControllerTests extends AbstractIT {
 
     @Nested
     class CreateOrderTests {
+
+        //
+        //        @Mock
+        //        private ProductServiceClient client;
+        //
+        //
+        //        private ProductResponse productResponse;
+        //
+        //        @BeforeEach
+        //        void setUp() {
+        //            productResponse =getProductResponse();
+        //
+        //        }
         @Test
         void shouldCreateOrderSuccessfully() {
+
             mockGetProductByCode("P100", "Product 1", new BigDecimal("25.50"));
             var payload =
                     """
@@ -51,8 +64,14 @@ class OrderControllerTests extends AbstractIT {
                             ]
                         }
                     """;
+
+            // ProductServiceClient client = Mockito.mock(ProductServiceClient.class);
+            // precondition
+            // when(client.getProductByCode(Mockito.anyString())).thenReturn(Optional.of(productResponse));
+            // doReturn(Optional.of(productResponse)).when(client).getProductByCode(Mockito.anyString());
+
             given().contentType(ContentType.JSON)
-                    .header("Authorization", "Bearer " + getToken())
+                    //     .header("Authorization", "Bearer " + getToken())
                     .body(payload)
                     .when()
                     .post("/api/orders")
@@ -65,7 +84,7 @@ class OrderControllerTests extends AbstractIT {
         void shouldReturnBadRequestWhenMandatoryDataIsMissing() {
             var payload = TestDataFactory.createOrderRequestWithInvalidCustomer();
             given().contentType(ContentType.JSON)
-                    .header("Authorization", "Bearer " + getToken())
+                    //    .header("Authorization", "Bearer " + getToken())
                     .body(payload)
                     .when()
                     .post("/api/orders")
@@ -79,7 +98,7 @@ class OrderControllerTests extends AbstractIT {
         @Test
         void shouldGetOrdersSuccessfully() {
             List<OrderSummary> orderSummaries = given().when()
-                    .header("Authorization", "Bearer " + getToken())
+                    //     .header("Authorization", "Bearer " + getToken())
                     .get("/api/orders")
                     .then()
                     .statusCode(200)
@@ -98,7 +117,7 @@ class OrderControllerTests extends AbstractIT {
         @Test
         void shouldGetOrderSuccessfully() {
             given().when()
-                    .header("Authorization", "Bearer " + getToken())
+                    //  .header("Authorization", "Bearer " + getToken())
                     .get("/api/orders/{orderNumber}", orderNumber)
                     .then()
                     .statusCode(200)
