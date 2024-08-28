@@ -26,7 +26,7 @@ public class OrderService {
     }
 
     public CreateOrderResponse createOrder(String userName, CreateOrderRequest request) {
-        orderValidator.validate(request);
+//        orderValidator.validate(request);
         OrderEntity newOrder = OrderMapper.convertToEntity(request);
         newOrder.setUserName(userName);
         OrderEntity savedOrder = this.orderRepository.save(newOrder);
