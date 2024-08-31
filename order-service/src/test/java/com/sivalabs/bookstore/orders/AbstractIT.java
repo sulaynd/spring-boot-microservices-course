@@ -3,40 +3,42 @@ package com.sivalabs.bookstore.orders;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.configureFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlPathTemplate;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
-import com.sivalabs.bookstore.orders.clients.catalog.ProductResponse;
 import io.restassured.RestAssured;
 import java.math.BigDecimal;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.web.servlet.MockMvc;
 import org.wiremock.integrations.testcontainers.WireMockContainer;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @Import(ContainersConfig.class)
-// @AutoConfigureMockMvc
+@AutoConfigureMockMvc
 public abstract class AbstractIT {
-    //    static final String CLIENT_ID = "bookstore-webapp";
-    //    static final String CLIENT_SECRET = "P1sibsIrELBhmvK18BOzw1bUl96DcP2z";
-    //    static final String USERNAME = "siva";
-    //    static final String PASSWORD = "siva1234";
-    //
+    static final String CLIENT_ID = "bookstore-webapp";
+    static final String CLIENT_SECRET = "P1sibsIrELBhmvK18BOzw1bUl96DcP2z";
+    static final String USERNAME = "siva";
+    static final String PASSWORD = "siva1234";
+
     //    @Autowired
     //    OAuth2ResourceServerProperties oAuth2ResourceServerProperties;
 
     @LocalServerPort
     int port;
 
-    //    @Autowired
-    //    protected MockMvc mockMvc;
+    @Autowired
+    protected MockMvc mockMvc;
 
     static WireMockContainer wiremockServer = new WireMockContainer("wiremock/wiremock:3.5.2-alpine");
 
@@ -54,10 +56,11 @@ public abstract class AbstractIT {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        // RestAssured.baseURI = "http://localhost:" + port;
     }
 
     protected static void mockGetProductByCode(String code, String name, BigDecimal price) {
-        stubFor(WireMock.get(urlPathTemplate("/api/products/" + code))
+        stubFor(WireMock.get(urlMatching("/api/products/" + code))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                         .withStatus(200)
@@ -72,15 +75,6 @@ public abstract class AbstractIT {
                                         .formatted(code, name, price.doubleValue()))));
     }
 
-    public static ProductResponse getProductResponse() {
-        var productResponse = new ProductResponse();
-        productResponse.setCode("P100");
-        productResponse.setName("Product 1");
-        productResponse.setPrice(new BigDecimal("25.50"));
-
-        return productResponse;
-    }
-    //
     //    protected String getToken() {
     //        RestTemplate restTemplate = new RestTemplate();
     //        HttpHeaders httpHeaders = new HttpHeaders();

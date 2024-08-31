@@ -72,6 +72,11 @@ public class OrderEventService {
         this.orderEventRepository.save(orderEvent);
     }
 
+    /**
+     *  In case of error the cron will resend the event
+     *   this is why the consumer should be idempotent meaning that it should be
+     *   able to send duplicate messages
+     */
     public void publishOrderEvents() {
         Sort sort = Sort.by("createdAt").ascending();
         List<OrderEventEntity> events = orderEventRepository.findAll(sort);

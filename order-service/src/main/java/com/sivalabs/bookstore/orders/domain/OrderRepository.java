@@ -18,6 +18,7 @@ interface OrderRepository extends JpaRepository<OrderEntity, Long> {
         this.save(order);
     }
 
+    //    List<OrderEntity> findByUserName(String userName);
     @Query(
             """
         select new com.sivalabs.bookstore.orders.domain.models.OrderSummary(o.orderNumber, o.status)
@@ -26,6 +27,7 @@ interface OrderRepository extends JpaRepository<OrderEntity, Long> {
         """)
     List<OrderSummary> findByUserName(String userName);
 
+    //    Optional<OrderEntity> findByUserNameAndOrderNumber(String userName, String orderNumber);
     @Query(
             """
         select distinct o
