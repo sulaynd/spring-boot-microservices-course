@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-class OrderValidator {
+public class OrderValidator {
     private static final Logger log = LoggerFactory.getLogger(OrderValidator.class);
 
     private final ProductServiceClient client;
@@ -19,7 +19,7 @@ class OrderValidator {
         this.client = client;
     }
 
-    void validate(CreateOrderRequest request) {
+    public void validate(CreateOrderRequest request) {
         Set<OrderItem> items = request.items();
         for (OrderItem item : items) {
             Product product = client.getProductByCode(item.code())

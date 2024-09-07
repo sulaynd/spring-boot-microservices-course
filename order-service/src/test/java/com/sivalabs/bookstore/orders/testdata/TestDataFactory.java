@@ -63,4 +63,15 @@ public class TestDataFactory {
                 .set(field(CreateOrderRequest::items), Set.of())
                 .create();
     }
+
+    public static  String mockGetProductByCode(){
+        return
+                """
+                {
+                    "code": "P100",
+                    "name": "Product 1",
+                    "price": 25.50
+                }
+                """;
+    }
 }

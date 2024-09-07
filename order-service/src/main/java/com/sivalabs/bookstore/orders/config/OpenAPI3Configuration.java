@@ -31,7 +31,7 @@
 //                        .title("Order Service APIs")
 //                        .description("BookStore Order Service APIs")
 //                        .version("v1.0.0")
-//                        .contact(new Contact().name("SivaLabs").email("sivalabs@sivalabs.in")))
+//                        .contact(new Contact().name("LoulySoft").email("sulaynd@louly-soft.com")))
 //                .servers(List.of(new Server().url(apiGatewayUrl)))
 //                .addSecurityItem(new SecurityRequirement().addList("Authorization"))
 //                .components(new Components()

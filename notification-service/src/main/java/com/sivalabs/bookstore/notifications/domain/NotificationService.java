@@ -85,7 +85,7 @@ public class NotificationService {
                 ===================================================
                 Order Processing Failure Notification
                 ----------------------------------------------------
-                Hi %s,
+                Hi Team,
                 The order processing failed for orderNumber: %s.
                 Reason: %s
 
@@ -93,7 +93,8 @@ public class NotificationService {
                 BookStore Team
                 ===================================================
                 """
-                        .formatted(properties.supportEmail(), event.orderNumber(), event.reason());
+                        .formatted(event.orderNumber(), event.reason());
+        // #Hi %s, .formatted(properties.supportEmail(), event.orderNumber(), event.reason());
         log.info("\n{}", message);
         sendEmail(properties.supportEmail(), "Order Processing Failure Notification", message);
     }

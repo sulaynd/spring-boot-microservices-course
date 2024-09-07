@@ -13,6 +13,10 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * update flyway_schema_history set checksum = '-1497832499' where installed_rank = '1';
+ * delete from flyway_schema_history where installed_rank = '1';
+ */
 @Component
 @Transactional
 public class OrderEventHandler {
@@ -28,11 +32,12 @@ public class OrderEventHandler {
 
     @RabbitListener(queues = "${notification.new-orders-queue}")
     public void handle(OrderCreatedEvent event) {
+        log.info("Orders created event :" + event);
         if (orderEventRepository.existsByEventId(event.eventId())) {
             log.warn("Received duplicate OrderCreatedEvent with eventId: {}", event.eventId());
             return;
         }
-        log.info("Received a OrderCreatedEvent with orderNumber:{}: ", event.orderNumber());
+        //    log.info("Received a OrderCreatedEvent with orderNumber:{}: ", event.orderNumber());
         notificationService.sendOrderCreatedNotification(event);
         var orderEvent = new OrderEventEntity(event.eventId());
         orderEventRepository.save(orderEvent);
@@ -40,11 +45,12 @@ public class OrderEventHandler {
 
     @RabbitListener(queues = "${notification.delivered-orders-queue}")
     public void handle(OrderDeliveredEvent event) {
+        log.info("Orders delivered event :" + event);
         if (orderEventRepository.existsByEventId(event.eventId())) {
             log.warn("Received duplicate OrderDeliveredEvent with eventId: {}", event.eventId());
             return;
         }
-        log.info("Received a OrderDeliveredEvent with orderNumber:{}: ", event.orderNumber());
+        //      log.info("Received a OrderDeliveredEvent with orderNumber:{}: ", event.orderNumber());
         notificationService.sendOrderDeliveredNotification(event);
         var orderEvent = new OrderEventEntity(event.eventId());
         orderEventRepository.save(orderEvent);
@@ -52,23 +58,25 @@ public class OrderEventHandler {
 
     @RabbitListener(queues = "${notification.cancelled-orders-queue}")
     public void handle(OrderCancelledEvent event) {
+        log.info("Orders cancelled event :" + event);
         if (orderEventRepository.existsByEventId(event.eventId())) {
             log.warn("Received duplicate OrderCancelledEvent with eventId: {}", event.eventId());
             return;
         }
         notificationService.sendOrderCancelledNotification(event);
-        log.info("Received a OrderCancelledEvent with orderNumber:{}: ", event.orderNumber());
+        // log.info("Received a OrderCancelledEvent with orderNumber:{}: ", event.orderNumber());
         var orderEvent = new OrderEventEntity(event.eventId());
         orderEventRepository.save(orderEvent);
     }
 
     @RabbitListener(queues = "${notification.error-orders-queue}")
     public void handle(OrderErrorEvent event) {
+        log.info("Orders Error event :" + event);
         if (orderEventRepository.existsByEventId(event.eventId())) {
             log.warn("Received duplicate OrderErrorEvent with eventId: {}", event.eventId());
             return;
         }
-        log.info("Received a OrderErrorEvent with orderNumber:{}: ", event.orderNumber());
+        //  log.info("Received a OrderErrorEvent with orderNumber:{}: ", event.orderNumber());
         notificationService.sendOrderErrorEventNotification(event);
         OrderEventEntity orderEvent = new OrderEventEntity(event.eventId());
         orderEventRepository.save(orderEvent);
